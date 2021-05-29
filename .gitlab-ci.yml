@@ -7,6 +7,8 @@ pages:
     - npm install -g @angular/cli@12.0.2
     - npm install
     - npm run build:ci
+  tags:
+    - web-dev
   artifacts:
     paths:
       - dist
