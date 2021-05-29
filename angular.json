@@ -28,7 +28,7 @@
               "hash.js",
               "web3"
             ],
-            "outputPath": "dist/",
+            "outputPath": "public",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",

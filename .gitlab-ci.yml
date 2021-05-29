@@ -11,7 +11,7 @@ pages:
     - web-dev
   artifacts:
     paths:
-      - dist
+      - public
   only:
     - main
     - pages
