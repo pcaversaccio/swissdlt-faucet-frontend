@@ -25,3 +25,23 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## Angular hack due to upgrade of `webpack` package to version 5
+Angular 12 has migrated to `webpack` v5 and made a bunch of other changes to it's build system. In order to successfully serve and build the application with the injected `web3.js` (the Ethereum JavaScript API), I implemented a little hack (based on painful hours of debugging):
+
+First, I had to install the required dependencies using
+```
+npm install crypto-browserify stream-browserify assert stream-http https-browserify os-browserify
+
+```
+and then add the following lines to the `polyfills.ts` file:
+```
+ (window as any).global = window;
+ import { Buffer } from 'buffer';
+ global.Buffer = Buffer;
+ global.process = {
+    env: { DEBUG: undefined },
+    version: '',
+    nextTick: require('next-tick')
+    } as any;
+```
