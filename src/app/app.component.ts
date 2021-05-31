@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import Web3 from 'web3';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import detectEthereumProvider from '@metamask/detect-provider';
 
 declare let window: any;
 declare var require: any;
@@ -64,7 +65,7 @@ export class AppComponent {
   }
 
   async sendETH() {
-    if (this.isMetaMaskConnectedToRinkeby()) {
+    if (await this.isMetaMaskConnectedToRinkeby() === true) {
         const contract = new this.web3.eth.Contract(contractAbi, contractAddress);
         const tx = await contract.methods.sendFunds().send({ from: this.accounts[0] });
         return tx;
@@ -72,7 +73,7 @@ export class AppComponent {
   }
 
   async fundFaucet() {
-    if (this.isMetaMaskConnectedToRinkeby()) {
+    if (await this.isMetaMaskConnectedToRinkeby() === true) {
         const tx = await this.web3.eth.sendTransaction({
           from: this.accounts[0],
           to: contractAddress,
@@ -92,7 +93,8 @@ export class AppComponent {
   }
 
   async isMetaMaskInstalled(){
-    return Boolean((typeof window.ethereum) && (typeof window.ethereum.isMetaMask));
+    const provider= await detectEthereumProvider();
+    return Boolean(provider);
   }
 
   async isMetaMaskConnectedToRinkeby() {
