@@ -16,6 +16,7 @@ const contractAddress = '0xeaBf236272A02c9587634261AF526EdacE27eb85';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+
   title = 'Swiss DLT Faucet Frontend';
   accounts: any;
   web3: any;
@@ -31,36 +32,30 @@ export class AppComponent {
     }
   }
 
-  async isMetaMaskInstalled(){
-    const provider= await detectEthereumProvider();
-    return Boolean(provider);
-  }
+  async connectMetaMask(){
 
-  async isMetaMaskConnected(){
-    return Boolean(this.accounts && this.accounts.length > 0);
-  }
+    let metaMaskInstalled = await this.isMetaMaskInstalled();
+    if(!metaMaskInstalled) {
+        this._snackBar.open('Please install MetaMask.', undefined, { duration: this.durationInSeconds*1000 });
+    }
 
-  async onClickConnect(){
-    const MM = await this.isMetaMaskInstalled();
-    const connected = await this.isMetaMaskConnected();
     this.chainId = await this.web3.eth.getChainId();
-    
-    if (MM === true && connected === false && this.chainId === 4) {
-      try {
-        const newAccounts = await window.ethereum.request({
-        method: 'eth_requestAccounts',
-      })
-      this.handleNewAccounts(newAccounts);
-      } catch (error) {
-      console.error(error);
+    if (this.chainId !== 4) {
+        this._snackBar.open('Please select the Rinkeby network in MetaMask.', undefined, { duration: this.durationInSeconds*1000 });
     }
-    } else if (this.chainId !== 4) {
-      this._snackBar.open('Please select the Rinkeby network in MetaMask.', undefined, { duration: this.durationInSeconds*1000 });
-    } else if (MM === false) {
-      this._snackBar.open('Please install MetaMask.', undefined, { duration: this.durationInSeconds*1000 });
-    } else if (connected === true) {
-      this._snackBar.open('MetaMask already connected.', undefined, { duration: this.durationInSeconds*1000 });
+
+    let metaMaskConnected = await this.isMetaMaskConnected();
+    if(!metaMaskConnected) {
+        try {
+            const newAccounts = await window.ethereum.request({method: 'eth_requestAccounts',});
+            this.handleNewAccounts(newAccounts);
+          } catch (error) {
+            console.error(error);
+          }
+    } else {
+        this._snackBar.open('MetaMask already connected.', undefined, { duration: this.durationInSeconds*1000 });
     }
+
   }
 
   async handleNewAccounts (newAccounts: any) {
@@ -70,35 +65,48 @@ export class AppComponent {
   }
 
   async sendETH() {
-    this.chainId = await this.web3.eth.getChainId();
-    if (await this.isMetaMaskConnected() === true && this.chainId === 4) {
-    const contract = new this.web3.eth.Contract(contractAbi, contractAddress);
-    const tx = await contract.methods.sendFunds().send({ from: this.accounts[0] });
-    return tx;
-    } else if (this.chainId !== 4) {
-      this._snackBar.open('Please select the Rinkeby network in MetaMask.', undefined, { duration: this.durationInSeconds*1000 });
-    } else {
-      this._snackBar.open('Please conntect your MetaMask first.', undefined, { duration: this.durationInSeconds*1000 });
+    if (await this.isMetaMaskConnectedToRinkeby() === true) {
+        const contract = new this.web3.eth.Contract(contractAbi, contractAddress);
+        const tx = await contract.methods.sendFunds().send({ from: this.accounts[0] });
+        return tx;
     }
   }
 
   async fundFaucet() {
+    if (await this.isMetaMaskConnectedToRinkeby() === true) {
+        const tx = await this.web3.eth.sendTransaction({
+          from: this.accounts[0],
+          to: contractAddress,
+          value: 0.1*10**18,
+          gas: 210000,
+          gasPrice: 20000000000,
+        }, (result: any) => {
+          console.log(result)
+        })
+
+        return tx;
+    }
+  }
+
+  async isMetaMaskConnected(){
+    return Boolean(this.accounts && this.accounts.length > 0);
+  }
+
+  async isMetaMaskInstalled(){
+    const provider= await detectEthereumProvider();
+    return Boolean(provider);
+  }
+
+  async isMetaMaskConnectedToRinkeby() {
     this.chainId = await this.web3.eth.getChainId();
-    if (await this.isMetaMaskConnected() === true && this.chainId === 4) {
-      const tx = await this.web3.eth.sendTransaction({
-        from: this.accounts[0],
-        to: contractAddress,
-        value: 2*10**18,
-        gas: 210000,
-        gasPrice: 20000000000,
-      }, (result: any) => {
-        console.log(result)
-      })
-      return tx;
+    if (await this.isMetaMaskConnected() === false) {
+        this._snackBar.open('Please conntect your MetaMask first.', undefined, { duration: this.durationInSeconds*1000 });
+        return false;
     } else if (this.chainId !== 4) {
-      this._snackBar.open('Please select the Rinkeby network in MetaMask.', undefined, { duration: this.durationInSeconds*1000 });
+        this._snackBar.open('Please select the Rinkeby network in MetaMask.', undefined, { duration: this.durationInSeconds*1000 });
+        return false;
     } else {
-      this._snackBar.open('Please conntect your MetaMask first.', undefined, { duration: this.durationInSeconds*1000 });
+        return true;
     }
   }
 }
