@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import Web3 from 'web3';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import detectEthereumProvider from '@metamask/detect-provider';
+import { environment } from './../environments/environment';
 
 declare let window: any;
 declare var require: any;
 
-const infuraWebsocket = 'wss://rinkeby.infura.io/ws/v3/506b137aa0d543268e847d6affb7963c';
+const infuraWebsocket = 'wss://rinkeby.infura.io/ws/v3/' + environment.INFURA_PROJECT_ID;
 const contractAbi = require('./services/FaucetContract.json');
 const contractAddress = '0xeaBf236272A02c9587634261AF526EdacE27eb85';
 
