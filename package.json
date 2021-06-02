@@ -21,11 +21,12 @@
   },
   "scripts": {
     "ng": "ng",
-    "clean": "rimraf ./dist",
-    "start": "ng serve -o",
-    "build": "ng build",
-    "build:prod": "ng build --configuration production",
-    "build:ci": "ng build --configuration production --base-href /swissdlt-faucet-frontend/",
+    "config": "ts-node ./scripts/setenv.ts",
+    "clean": "rimraf ./public",
+    "start": "npm run config -- --environment=dev && ng serve -o",
+    "build:dev": "npm run config -- --environment=dev && ng build",
+    "build:prod": "npm run config -- --environment=dev && npm run config -- --environment=prod && ng build --configuration production",
+    "build:ci": "npm run clean && npm run config -- --environment=dev && npm run config -- --environment=prod && ng build --configuration production --base-href /swissdlt-faucet-frontend/",
     "lint": "ng lint",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
@@ -73,6 +74,7 @@
     "@types/node": "^12.11.1",
     "@typescript-eslint/eslint-plugin": "4.23.0",
     "@typescript-eslint/parser": "4.23.0",
+    "dotenv": "^10.0.0",
     "eslint": "^7.26.0",
     "husky": "^6.0.0",
     "jasmine-core": "~3.7.0",
@@ -81,6 +83,8 @@
     "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
-    "typescript": "~4.2.3"
+    "ts-node": "^10.0.0",
+    "typescript": "~4.2.3",
+    "yargs": "^16.2.0"
   }
 }
