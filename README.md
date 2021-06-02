@@ -20,7 +20,7 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
 
 ## Environment variables
-I use the `[dotenv](https://www.npmjs.com/package/dotenv` npm package - which is a zero-dependency module that loads environment variables from a `.env` file into `process.env` -  in combination with a self-coded TypeScript script `setenv.ts` (located at `scripts/`) to load the environment variables for the development as well as the production environment. This is particularly important for loading the *Infura Project ID*. For the GitLab CI/CD, I configured a masked CI/CD variable ([Learn more](https://gitlab.appswithlove.net/help/ci/variables/README#mask-a-cicd-variable)).
+I use the `[dotenv](https://www.npmjs.com/package/dotenv)` npm package - which is a zero-dependency module that loads environment variables from a `.env` file into `process.env` -  in combination with a self-coded TypeScript script `setenv.ts` (located at `scripts/`) to load the environment variables for the development as well as the production environment. This is particularly important for loading the *Infura Project ID*. For the GitLab CI/CD, I configured a masked CI/CD variable ([Learn more](https://gitlab.appswithlove.net/help/ci/variables/README#mask-a-cicd-variable)).
 
 ## Angular hack due to upgrade of `webpack` package to version 5
 Angular 12 has migrated to `webpack` v5 and made a bunch of other changes to it's build system. In order to successfully serve and build the application with the injected `web3.js` (the Ethereum JavaScript API), I implemented a little hack (based on painful hours of debugging):
