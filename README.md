@@ -1,5 +1,5 @@
 # Swiss DLT Faucet Frontend
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version `12.0.2` and Node.js version `16.0.0`. Also, I make use via the CI/CD configuration `.gitlab-ci.yml` of [GitLab Pages](https://docs.gitlab.com/ee/user/project/pages/) and the Angular application is served [here](http://swissdlt.appswithlove.site/swissdlt-faucet-frontend).
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version `12.0.2` and Node.js version `16.0.0`. Also, I make use via the CI/CD configuration [`.gitlab-ci.yml`](https://gitlab.appswithlove.net/swissdlt/swissdlt-faucet-frontend/-/blob/main/.gitlab-ci.yml) of [GitLab Pages](https://docs.gitlab.com/ee/user/project/pages/) and the Angular application is served [here](http://swissdlt.appswithlove.site/swissdlt-faucet-frontend).
 
 ## Development server
 Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
